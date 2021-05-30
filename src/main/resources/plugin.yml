@@ -1,0 +1,4 @@
+name: Aooni
+version: ${project.version}
+main: com.elic0de.aooni.Aooni
+api-version: 1.16
