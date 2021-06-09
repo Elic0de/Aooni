@@ -1,4 +1,4 @@
-package com.elic0de.aooni.listener;
+package com.elic0de.aooni.listeners;
 
 public class PlayerMoveListener {
 }
