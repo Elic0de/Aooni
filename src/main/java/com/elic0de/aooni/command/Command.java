@@ -19,16 +19,8 @@ public interface Command extends Listener {
     }
 
     default boolean hasPermission(Sender sender, String commandName){
-
-        if (sender.hasPermission("parkour." + commandName.toLowerCase())) return false;
-
-//        BilingualText.stream("&cこのコマンドを実行する権限がありません",
-//                "&cI'm sorry but you do not have permission to perform this command." +
-//                        " Please contact the server administractors if you believe that this is in error.")
-//                .color()
-//                .setReceiver(sender.asPlayerCommandSender())
-//                .sendChatMessage();
-
+        if (sender.hasPermission("aooni." + commandName.toLowerCase())) return false;
+        sender.sendMessage("このコマンドを実行する権限がありません");
         return true;
     }
 

@@ -2,17 +2,17 @@ package com.elic0de.aooni.game;
 
 import com.elic0de.aooni.Aooni;
 import com.elic0de.aooni.config.Yaml;
-import com.elic0de.aooni.enums.GameType;
 import com.elic0de.aooni.enums.MatchState;
 import com.elic0de.aooni.utilities.location;
-import com.google.common.collect.Lists;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -44,7 +44,7 @@ public class Game {
 
     public  Game(GameManager games, Yaml yaml){
         this.gameManager = games;
-        //yaml.nameは拡張子を取り除いたファイル名を返すのでアスレ名としてそのまま設定する
+        //yaml.nameは拡張子を取り除いたファイル名を返すのでゲーム名としてそのまま設定する
         this.name = yaml.name;
         this.enable = yaml.getBoolean("Enable");
         this.matchState = MatchState.WAITINGLOBBY;
@@ -124,10 +124,6 @@ public class Game {
         }.runTaskTimer(Aooni.instance(), 0L, 20L);
     }
 
-    private void playSound(Player player, Sound sound) {
-        player.playSound(player.getLocation(), sound, 1.0f, 2.0f);
-    }
-
     public void startGame(){
         this.matchState = MatchState.PLAYING;
         this.players.stream().filter(player -> !aooniPlayers.stream().anyMatch(oni -> player.equals(oni))).collect(Collectors.toList()).forEach(player -> teleportToArea(player));
@@ -156,6 +152,10 @@ public class Game {
         players.clear();
         winners.clear();
         spectators.clear();
+    }
+
+    private void playSound(Player player, Sound sound) {
+        player.playSound(player.getLocation(), sound, 1.0f, 2.0f);
     }
 
     public void doDisplayResult() {
