@@ -3,7 +3,7 @@ package com.elic0de.aooni.game;
 import com.elic0de.aooni.Aooni;
 import com.elic0de.aooni.config.Yaml;
 import com.elic0de.aooni.enums.MatchState;
-import com.elic0de.aooni.utilities.location;
+import com.elic0de.aooni.utilities.loc;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -38,6 +38,8 @@ public class Game {
     private int timeLimit;
     private  int timer;
 
+    private ChestSet chest;
+
     private Location spawn;
     private Location area;
 
@@ -46,14 +48,16 @@ public class Game {
         this.gameManager = games;
         //yaml.nameは拡張子を取り除いたファイル名を返すのでゲーム名としてそのまま設定する
         this.name = yaml.name;
-        this.enable = yaml.getBoolean("Enable");
+        this.enable = yaml.getBoolean("enable");
         this.matchState = MatchState.WAITINGLOBBY;
         this.minPlayers = yaml.getInt("minPlayers");
         this.maxPlayers = yaml.getInt("maxPlayers");
         this.timeLimit = yaml.getInt("timeLimit");
         this.timer = yaml.getInt("timer");
-        this.spawn = location.stringToLocation(yaml.getString("spawn"));
-        this.area = location.stringToLocation(yaml.getString("area"));
+        this.spawn = loc.stringToLocation(yaml.getString("spawn"));
+        this.area = loc.stringToLocation(yaml.getString("area"));
+
+        this.chest = new ChestSet(yaml);
     }
 
     public String getName() {
@@ -140,8 +144,7 @@ public class Game {
                 timeLimit --;
                 if(timeLimit <= 0){
                     cancel();
-                    broadcast("終了!!");
-                    doDisplayResult();
+                    endGame();
                 }
             }
         }.runTaskTimer(Aooni.instance(), 0L, 20L);
@@ -152,6 +155,8 @@ public class Game {
         players.clear();
         winners.clear();
         spectators.clear();
+        broadcast("終了!!");
+        doDisplayResult();
     }
 
     private void playSound(Player player, Sound sound) {
@@ -171,6 +176,16 @@ public class Game {
     }
 
     public void save(){
+        Yaml yaml = GameManager.getInstance().makeYaml(this.name);
+        yaml.set("enable", this.enable);
+        yaml.set("minPlayers", this.minPlayers);
+        yaml.set("maxPlayers", this.maxPlayers);
+        yaml.set("timeLimit", this.timeLimit);
+        yaml.set("timer", this.timer);
+        yaml.set("spawn", loc.locationToString(this.spawn));
+        yaml.set("area", loc.locationToString(this.area));
+        yaml.save();
 
+        this.chest.save(yaml);
     }
 }

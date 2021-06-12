@@ -11,12 +11,11 @@ import fr.minuskube.inv.content.SlotIterator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_GRAY;
 
 public class ArenaMenu implements InventoryProvider {
 

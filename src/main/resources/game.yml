@@ -1,0 +1,9 @@
+'enable': false
+'minPlayers': 2
+'maxPlayers': 20
+'timeLimit': 600
+'timer': 5
+'spawn':
+'area':
+'chestLocations':
+'chestItems':

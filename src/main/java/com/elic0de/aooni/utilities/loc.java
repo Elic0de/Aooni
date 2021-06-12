@@ -3,7 +3,7 @@ package com.elic0de.aooni.utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public class location {
+public class loc {
 
     public static Location stringToLocation(final String location) {
         if (location != null) {
