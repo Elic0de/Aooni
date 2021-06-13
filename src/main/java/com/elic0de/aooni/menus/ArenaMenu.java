@@ -1,5 +1,6 @@
 package com.elic0de.aooni.menus;
 
+import com.elic0de.aooni.Aooni;
 import com.elic0de.aooni.game.Game;
 import com.elic0de.aooni.game.GameManager;
 import fr.minuskube.inv.ClickableItem;
@@ -15,19 +16,18 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.*;
 
 public class ArenaMenu implements InventoryProvider {
 
-    public static SmartInventory INVENTORY() {
-        return SmartInventory.builder()
-                .id("gameList")
-                .provider(new ArenaMenu())
-                .size(6, 9)
-                .title(DARK_GRAY + "ゲームリスト")
-                .closeable(true)
-                .build();
-    }
+    public static final SmartInventory INVENTORY = SmartInventory.builder()
+            .id("arenaMenu")
+            .manager(Aooni.instance().getManager())
+            .provider(new ArenaMenu())
+            .size(6, 9)
+            .title(DARK_AQUA + "ゲームリスト")
+            .closeable(true)
+            .build();
 
     @Override
     public void init(Player player, InventoryContents contents) {
@@ -40,10 +40,10 @@ public class ArenaMenu implements InventoryProvider {
             items[i] = ClickableItem.of(new ItemStack(Material.ARROW),inventoryClickEvent -> game.joinGame(player));
         }
 
-        contents.set(2, 3, ClickableItem.of(new ItemStack(Material.ARROW),
-                e -> INVENTORY().open(player, pagination.previous().getPage())));
-        contents.set(2, 5, ClickableItem.of(new ItemStack(Material.ARROW),
-                e -> INVENTORY().open(player, pagination.next().getPage())));
+        contents.set(5, 3, ClickableItem.of(new ItemStack(Material.ARROW),
+                e -> ArenaMenu.INVENTORY.open(player, pagination.previous().getPage())));
+        contents.set(5, 5, ClickableItem.of(new ItemStack(Material.ARROW),
+                e -> ArenaMenu.INVENTORY.open(player, pagination.next().getPage())));
 
         pagination.setItems(items);
         pagination.setItemsPerPage(36);

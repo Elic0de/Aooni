@@ -3,7 +3,7 @@
 'maxPlayers': 20
 'timeLimit': 600
 'timer': 5
-'spawn':
-'area':
+'spawn': "world:0:0:0:0:0"
+'area': "world:0:0:0:0:0"
 'chestLocations':
 'chestItems':

@@ -3,7 +3,9 @@ package com.elic0de.aooni.command.game;
 import com.elic0de.aooni.command.Arguments;
 import com.elic0de.aooni.command.Command;
 import com.elic0de.aooni.command.Sender;
+import com.elic0de.aooni.game.Game;
 import com.elic0de.aooni.game.GameManager;
+import com.elic0de.aooni.menus.ArenaMenu;
 import org.bukkit.entity.Player;
 
 public class GameCommand implements Command {
@@ -39,13 +41,25 @@ public class GameCommand implements Command {
                 gameManager.makeYaml(gameName);
                 //無効化された状態で登録
                 gameManager.registerGame(gameName);
+
+                Game game = gameManager.getGame(gameName);
+                game.setArea(player.getLocation());
+                game.setSpawn(player.getLocation());
+
                 player.sendMessage(gameName + "が作成されました");
                 break;
             } case "delete": {
                 break;
             } case "enable": {
+                if(!gameManager.containsGame(gameName)) {
+                    player.sendMessage(gameName + "は存在しません");
+                    return;
+                }
+                Game game = gameManager.getGame(gameName);
+                game.setEnable(true);
                 break;
-            } case "disable": {
+            } case "menu": {
+                ArenaMenu.INVENTORY.open(player);
                 break;
             } case "info": {
                 break;

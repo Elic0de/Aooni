@@ -1,4 +1,4 @@
-package com.elic0de.aooni.utilities;
+package com.elic0de.aooni.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

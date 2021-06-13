@@ -1,4 +1,15 @@
 name: Aooni
 version: ${project.version}
 main: com.elic0de.aooni.Aooni
-api-version: 1.16
+api-version: 1.12
+
+commands:
+  aooni:
+    description: main command.
+    usage: /<command>
+  game:
+    description: main command.
+    usage: /<command>
+  gameedit:
+    description: main command.
+    usage: /<command>

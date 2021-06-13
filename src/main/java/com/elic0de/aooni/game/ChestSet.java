@@ -1,7 +1,7 @@
 package com.elic0de.aooni.game;
 
 import com.elic0de.aooni.config.Yaml;
-import com.elic0de.aooni.utilities.loc;
+import com.elic0de.aooni.util.loc;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
