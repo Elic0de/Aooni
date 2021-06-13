@@ -92,7 +92,7 @@ public class Game {
             player.sendMessage("ゲームに参加しました (" + players.size() + "/" + maxPlayers + ")");
         }
 
-        if (this.minPlayers >= this.players.size()) waitStart();
+        if (this.minPlayers <= this.players.size()) waitStart();
         User user = UserSet.getInstnace().getUser(player);
         StatusBoard statusBoard = user.statusBoard = new StatusBoard(player, this);
         statusBoard.loadScoreboard();
@@ -141,7 +141,7 @@ public class Game {
         this.players.stream().filter(player -> !aooniPlayers.stream().anyMatch(oni -> player.equals(oni))).collect(Collectors.toList()).forEach(player -> teleportToArea(player));
 
         //chestをセットする
-
+        chest.fillChest();
         players.forEach(player -> playSound(player, Sound.ENTITY_PLAYER_LEVELUP));
         broadcast("スタート！");
         Player player = players.get(new Random().nextInt(players.size()));
@@ -250,6 +250,10 @@ public class Game {
         return currentTime;
     }
 
+    public ChestSet getChest() {
+        return chest;
+    }
+
     public void setArea(Location area) {
         this.area = area;
     }
@@ -269,8 +273,8 @@ public class Game {
         yaml.set("timer", this.timer);*/
         yaml.set("spawn", loc.locationToString(this.spawn));
         yaml.set("area", loc.locationToString(this.area));
-        yaml.save();
+        chest.save(yaml);
 
-        this.chest.save(yaml);
+        yaml.save();
     }
 }

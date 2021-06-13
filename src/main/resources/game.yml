@@ -5,7 +5,7 @@
 'timer': 5
 'spawn': "world:0:0:0:0:0"
 'area': "world:0:0:0:0:0"
-'chestLocations':
+'chestLocations': []
 'chestItems':
   '50':
     items:

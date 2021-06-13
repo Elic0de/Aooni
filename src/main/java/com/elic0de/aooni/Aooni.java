@@ -8,6 +8,7 @@ import com.elic0de.aooni.command.game.GameEditCommand;
 import com.elic0de.aooni.game.GameManager;
 import com.elic0de.aooni.listeners.*;
 import com.elic0de.aooni.user.UserSet;
+import com.elic0de.aooni.user.selection.SelectionSet;
 import fr.minuskube.inv.InventoryManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,12 +37,14 @@ public final class Aooni extends JavaPlugin implements Listener {
 
         UserSet.load();
         GameManager.load();
+        SelectionSet.load();
 
         registerEventListeners(
                 new PlayerInteractListener(),
                 new UserJoinListener(),
                 new UserQuitListener(),
-                UserSet.getInstnace()
+                UserSet.getInstnace(),
+                SelectionSet.getInstance()
         );
 
         registerCommands(

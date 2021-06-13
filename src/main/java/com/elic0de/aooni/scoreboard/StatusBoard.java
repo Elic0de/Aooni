@@ -5,6 +5,7 @@ import com.elic0de.aooni.game.Game;
 import com.elic0de.aooni.util.format.TimeFormat;
 import com.elic0de.aooni.util.tuplet.Triple;
 import com.google.common.collect.ImmutableList;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,26 +29,30 @@ public class StatusBoard {
 
     static{
         LINES = ImmutableList.of(
-                new Line(3, "残り人数 $value", u -> u.getPlayers().size()),
-                new Line(2, "残り時間 $value", u -> TimeFormat.secondsToTimeString(u.getTimeLimit())),
+                new Line(3, "&e残り人数 $value", u -> u.getPlayers().size()),
+                new Line(2, "&6残り時間 $value", u -> TimeFormat.secondsToTimeString(u.getTimeLimit())),
                 new Line(1, " ", u -> ""),
-                new Line(0, "hatosaba.f5.si", u -> "")
+                new Line(0, "&ehatosaba.f5.si", u -> "")
 
         );
 
         WAITING_LINES = ImmutableList.of(
-                new Line(4, "はじめるには", u -> ""),
-                new Line(3, "残り$valueのプレイヤー", u -> u.getMinPlayers() - u.getPlayers().size()),
+                new Line(8, "   ", u -> ""),
+                new Line(7, "マップ名: &a$value", u -> u.getName()),
+                new Line(6, "プレイヤー数: &a$value", u -> u.getPlayers().size() + "/" + u.getMaxPlayers()),
+                new Line(5, "  ", u -> ""),
+                new Line(4, "ゲームをはじめるには", u -> ""),
+                new Line(3, "あと&a$value&rプレイヤー", u -> u.getMinPlayers() - u.getPlayers().size()),
                 new Line(2, "が必要です", u -> ""),
                 new Line(1, " ", u -> ""),
-                new Line(0, "hatosaba.f5.si", u -> "")
+                new Line(0, "&ehatosaba.f5.si", u -> "")
         );
 
         WAITING_START_LINES = ImmutableList.of(
-                new Line(3, "はじめるまで", u -> ""),
-                new Line(2, "残り$value秒", u -> u.getTimer()),
+                new Line(3, "はじまるまで", u -> ""),
+                new Line(2, "残り&a$value&r秒", u -> u.getTimer()),
                 new Line(1, " ", u -> ""),
-                new Line(0, "hatosaba.f5.si", u -> "")
+                new Line(0, "&ehatosaba.f5.si", u -> "")
         );
     }
 
@@ -67,7 +72,7 @@ public class StatusBoard {
 
         for(Line line : getLine()){
             //表示するテキストを作成する
-            String text = line.second.replace("$value", line.third.apply(game).toString());
+            String text = ChatColor.translateAlternateColorCodes('&', line.second.replace("$value", line.third.apply(game).toString()));
             //タイトルを設定
             board.setTitle("Aooni");
 

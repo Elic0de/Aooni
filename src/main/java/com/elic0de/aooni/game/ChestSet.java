@@ -14,10 +14,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChestSet {
 
     private final Map<Integer, List<ItemStack>> chestItems = new HashMap<>();
+    private final List<Location> chestLocations = new ArrayList<>();
 
     private final Random random = new Random();
 
@@ -32,61 +34,79 @@ public class ChestSet {
             randomDSlot.add(i);
         }
 
-        if(!yaml.isConfigurationSection("chestItems")) return;
 
-        ConfigurationSection checkAreaSection = yaml.getConfigurationSection("chestItems");
+        if(yaml.isConfigurationSection("chestItems")) {
 
-        for(String key : checkAreaSection.getKeys(false)){
+            ConfigurationSection checkAreaSection = yaml.getConfigurationSection("chestItems");
 
-            //整数型に変換する
-            int percent = Integer.parseInt(key);
+            for (String key : checkAreaSection.getKeys(false)) {
 
-            List<ItemStack> items = (List<ItemStack>) yaml.getList("chestItems." + percent + ".items");
+                //整数型に変換する
+                int percent = Integer.parseInt(key);
 
-            chestItems.put(percent, items);
+                List<ItemStack> items = (List<ItemStack>) yaml.getList("chestItems." + percent + ".items");
+
+                chestItems.put(percent, items);
+            }
         }
 
-        if(!yaml.isConfigurationSection("chestLocations")) return;
-
-        for (String key : yaml.getStringList("chestLocations")) {
-            Location location = loc.stringToLocation(key);
-            if(location.getBlock() == null) return;
-            fillChest(location.getBlock());
+        if(yaml.isConfigurationSection("chestLocations")) {
+            for (String key : yaml.getStringList("chestLocations")) {
+                Location location = loc.stringToLocation(key);
+                chestLocations.add(location);
+            }
         }
     }
 
-    public void fillChest(Block block) {
-        if (block.getState() instanceof Chest) {
+    public void chestAdd(Location location) {
+        chestLocations.add(location);
 
-            Chest chest = (Chest) block.getState();
-            Inventory chestInventory = chest.getInventory();
+        System.out.println("add");
+    }
 
-            if (chestInventory != null) {
-                chestInventory.clear();
-                int added = 0;
-                Collections.shuffle(randomSlot);
-                Collections.shuffle(randomDSlot);
-                adding:
-                {
-                    for (int chance : chestItems.keySet()) {
-                        for (ItemStack item : chestItems.get(chance)) {
-                            if (item != null && !item.getType().equals(Material.AIR)) {
-                                if (chest instanceof Chest) {
-                                    if (random.nextInt(100) + 1 <= chance) {
-                                        chestInventory.setItem(randomSlot.get(added), item);
-                                        added++;
-                                        if (added >= chestInventory.getSize() - 1 || added >= 5) {
-                                            break adding;
+    public void removeChest(Location location) {
+        if(chestLocations.contains(location))
+        chestLocations.remove(location);
+    }
+
+    public void fillChest() {
+        for (Location location : chestLocations) {
+            Block block = location.getBlock();
+
+            if(block == null) return;
+
+            if (block.getState() instanceof Chest) {
+
+                Chest chest = (Chest) block.getState();
+                Inventory chestInventory = chest.getInventory();
+
+                if (chestInventory != null) {
+                    chestInventory.clear();
+                    int added = 0;
+                    Collections.shuffle(randomSlot);
+                    Collections.shuffle(randomDSlot);
+                    adding:
+                    {
+                        for (int chance : chestItems.keySet()) {
+                            for (ItemStack item : chestItems.get(chance)) {
+                                if (item != null && !item.getType().equals(Material.AIR)) {
+                                    if (chest instanceof Chest) {
+                                        if (random.nextInt(100) + 1 <= chance) {
+                                            chestInventory.setItem(randomSlot.get(added), item);
+                                            added++;
+                                            if (added >= chestInventory.getSize() - 1 || added >= 5) {
+                                                break adding;
+                                            }
                                         }
                                     }
-                                }
-                                if (chest instanceof DoubleChest) {
-                                    if (random.nextInt(100) + 1 <= chance) {
-                                        chestInventory.setItem(randomDSlot.get(added), item);
-                                        added++;
-                                        if (added >= chestInventory.getSize() - 1 || added >= 10) {
-                                            break adding;
+                                    if (chest instanceof DoubleChest) {
+                                        if (random.nextInt(100) + 1 <= chance) {
+                                            chestInventory.setItem(randomDSlot.get(added), item);
+                                            added++;
+                                            if (added >= chestInventory.getSize() - 1 || added >= 10) {
+                                                break adding;
 
+                                            }
                                         }
                                     }
                                 }
@@ -98,19 +118,23 @@ public class ChestSet {
         }
     }
 
-    public void save(Yaml yaml){
-        if(!yaml.isConfigurationSection("chestItems")) return;
+    public void save(Yaml yaml) {
+        if (yaml.isConfigurationSection("chestItems")) {
 
-        if(!(yaml.getConfigurationSection("chestItems") == null)) {
-            for (String index : yaml.getConfigurationSection("chestItems").getKeys(false)) {
-                yaml.set("chestItems." + index, null);
+            if (!(yaml.getConfigurationSection("chestItems") == null)) {
+                for (String index : yaml.getConfigurationSection("chestItems").getKeys(false)) {
+                    yaml.set("chestItems." + index, null);
+                }
+            }
+
+            for (Map.Entry<Integer, List<ItemStack>> checkAreasEntry : chestItems.entrySet()) {
+                int majorCheckAreaNumber = checkAreasEntry.getKey();
+
+                yaml.set("chestItems." + majorCheckAreaNumber, checkAreasEntry.getValue());
             }
         }
+        yaml.set("chestLocations", chestLocations.stream().map(location -> loc.locationToString(location)).collect(Collectors.toList()));
 
-        for(Map.Entry<Integer, List<ItemStack>> checkAreasEntry : chestItems.entrySet()){
-            int majorCheckAreaNumber = checkAreasEntry.getKey();
 
-            yaml.set("chestItems." + majorCheckAreaNumber, checkAreasEntry.getValue());
-        }
     }
 }
