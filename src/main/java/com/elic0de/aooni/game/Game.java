@@ -167,6 +167,8 @@ public class Game {
 
     public void endGame(){
         this.matchState = MatchState.ENDING;
+        broadcast("終了!!");
+        doDisplayResult();
         players.forEach(player -> {
             User user = UserSet.getInstnace().getUser(player);
             user.statusBoard.clearScoreboard();
@@ -174,8 +176,6 @@ public class Game {
         players.clear();
         winners.clear();
         spectators.clear();
-        broadcast("終了!!");
-        doDisplayResult();
     }
 
     public void reset(){

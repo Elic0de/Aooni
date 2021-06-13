@@ -3,6 +3,7 @@ package com.elic0de.aooni.menus;
 import com.elic0de.aooni.Aooni;
 import com.elic0de.aooni.game.Game;
 import com.elic0de.aooni.game.GameManager;
+import com.elic0de.aooni.util.item.ItemStackBuilder;
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
@@ -13,6 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +40,13 @@ public class ArenaMenu implements InventoryProvider {
 
         for (int i = 0; i < items.length; i++) {
             Game game = games.get(i);
-            items[i] = ClickableItem.of(new ItemStack(Material.ARROW),inventoryClickEvent -> game.joinGame(player));
+            items[i] = ClickableItem.of(
+                    ItemStackBuilder.builder(Material.ANVIL)
+                    .setDisplayName("&c-" + game.getName())
+                    .setLore(Arrays.asList("test","&ctest"))
+
+                    .build()
+                    , inventoryClickEvent -> game.joinGame(player));
         }
 
         contents.set(5, 3, ClickableItem.of(new ItemStack(Material.ARROW),
@@ -48,7 +57,7 @@ public class ArenaMenu implements InventoryProvider {
         pagination.setItems(items);
         pagination.setItemsPerPage(36);
 
-        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0).allowOverride(false));
+        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 0, 0).allowOverride(false));
     }
 
     @Override

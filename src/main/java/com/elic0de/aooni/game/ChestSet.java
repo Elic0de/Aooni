@@ -2,8 +2,10 @@ package com.elic0de.aooni.game;
 
 import com.elic0de.aooni.config.Yaml;
 import com.elic0de.aooni.util.loc;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
@@ -48,12 +50,13 @@ public class ChestSet {
 
         for (String key : yaml.getStringList("chestLocations")) {
             Location location = loc.stringToLocation(key);
+            if(location.getBlock() == null) return;
             fillChest(location.getBlock());
         }
     }
 
     public void fillChest(Block block) {
-        if (block.getState() instanceof ChestSet) {
+        if (block.getState() instanceof Chest) {
 
             Chest chest = (Chest) block.getState();
             Inventory chestInventory = chest.getInventory();
@@ -96,6 +99,8 @@ public class ChestSet {
     }
 
     public void save(Yaml yaml){
+        if(!yaml.isConfigurationSection("chestItems")) return;
+
         if(!(yaml.getConfigurationSection("chestItems") == null)) {
             for (String index : yaml.getConfigurationSection("chestItems").getKeys(false)) {
                 yaml.set("chestItems." + index, null);

@@ -16,6 +16,7 @@ public class GameCommand implements Command {
     public void onCommand(Sender sender, Arguments args) {
         //送信者がプレイヤーでなければ戻る
         if(blockNonPlayer(sender)) return;
+        Player player = sender.asPlayerCommandSender();
 
         if(sender.hasPermission("test"))
 
@@ -24,8 +25,6 @@ public class GameCommand implements Command {
             displayCommandUsage(sender);
             return;
         }
-
-        Player player = sender.asPlayerCommandSender();
 
         String gameName = args.next();
 
